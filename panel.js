@@ -269,9 +269,9 @@
       return card;
     };
     const sec = (title, note) => { const s = el('section', 'easy-sec'); s.append(el('h3', '', title)); if (note) s.append(el('p', 'hint', note)); v.append(s); return s; };
-    if (pl.ok) { const s = sec('الباقات', 'السعر بالدولار. الرصيد المتجدد بيتضاف لما رصيد المستخدم يخلص وبعد عدد الساعات.'); pl.data.rows.forEach(r => s.append(row('plans', pl.data, r, EASY_PLAN, o => o.id))); }
-    if (pr.ok) { const s = sec('تكلفة العمليات بالكريديت'); pr.data.rows.forEach(r => s.append(row('pricing', pr.data, r, [['credits', 'الكريديت'], ['active', 'مفعل']], o => o.label || o.key))); }
-    if (st.ok) { const s = sec('الشراء وإعدادات المتجر', 'سعر الكريديت: أقل عدد بسعر أقل عدد، والشراء بمضاعفات.'); st.data.rows.forEach(r => s.append(row('settings', st.data, r, [['value', 'القيمة']], o => o.label || o.key))); }
+    if (pl.ok && pl.rows) { const s = sec('الباقات', 'السعر بالدولار. الرصيد المتجدد بيتضاف لما رصيد المستخدم يخلص وبعد عدد الساعات.'); pl.rows.forEach(r => s.append(row('plans', pl, r, EASY_PLAN, o => o.id))); }
+    if (pr.ok && pr.rows) { const s = sec('تكلفة العمليات بالكريديت'); pr.rows.forEach(r => s.append(row('pricing', pr, r, [['credits', 'الكريديت'], ['active', 'مفعل']], o => o.label || o.key))); }
+    if (st.ok && st.rows) { const s = sec('الشراء وإعدادات المتجر', 'سعر الكريديت الواحد = سعر أقل عدد ÷ أقل عدد. المستخدم يقدر يشتري أي عدد من أقل عدد وطالع (مثلاً 51).'); st.rows.filter(r => r.v[0] !== 'credit_step').forEach(r => s.append(row('settings', st, r, [['value', 'القيمة']], o => o.label || o.key))); }
   }
 
   // ---------- password confirm ----------
@@ -297,7 +297,7 @@
   }
 
   // ---------- health ----------
-  const HNAME = { SHET_URL: 'رابط الشيت في الخادم', SECRIT: 'المفتاح السري في الخادم', ALLOW: 'المواقع المسموحة (ALLOW)', AI: 'موديلات Cloudflare متوصلة', sheet_link: 'الاتصال بالشيت', schema: 'إصدار الجداول', 'prop:SECRIT': 'SECRIT في الشيت', 'prop:OTP1': 'OTP1 (إرسال الأكواد)', 'prop:OTP_FROM': 'OTP_FROM (اسم المرسل)', 'prop:test_api': 'مفتاح fal (test_api)', panel: 'بيانات دخول اللوحة (ss)', mail_quota: 'رصيد الإيميلات النهارده', text: 'موديل تحسين الوصف', translate: 'موديل الترجمة', image: 'موديل الصور', fal: 'fal.ai (Pro والفيديو)' };
+  const HNAME = { SHET_URL: 'رابط الشيت في الخادم', SECRIT: 'المفتاح السري في الخادم', ALLOW: 'المواقع المسموحة (ALLOW)', AI: 'Cloudflare (تحسين الوصف والترجمة)', sheet_link: 'الاتصال بالشيت', schema: 'إصدار الجداول', 'prop:SECRIT': 'SECRIT في الشيت', 'prop:OTP1': 'OTP1 (إرسال الأكواد)', 'prop:OTP_FROM': 'OTP_FROM (اسم المرسل)', 'prop:flux1-api': 'مفتاح flux1-api (الصور المجانية)', 'prop:flux2-api': 'مفتاح flux2-api (صور Pro)', 'prop:wan-api': 'مفتاح wan-api (الفيديو)', panel: 'بيانات دخول اللوحة (ss)', mail_quota: 'رصيد الإيميلات النهارده', text: 'موديل تحسين الوصف', translate: 'موديل الترجمة', flux1: 'FLUX.1-dev (مجاني)', flux2: 'FLUX.2-dev (Pro)', wan: 'Wan (الفيديو)' };
   function hRow(c) {
     const r = el('div', 'h-row');
     const name = HNAME[c.k] || (c.k.indexOf('sheet:') === 0 ? 'ورقة ' + c.k.slice(6) : c.k);
@@ -311,7 +311,7 @@
     v.append(el('h2', '', 'فحص الخادم والموديلات'), el('p', 'section-note', 'الفحص العادي بيتأكد من إعدادات الخادم والشيت والجداول. اختار الموديلات اللي عايز تجربها فعلياً، وخلي بالك إن تجربة موديل الصور بتستهلك من حصة Cloudflare اليومية.'));
     const opts = el('div', 'h-opts');
     const box = (k, label, on) => { const l = el('label', 'h-opt'); const c = el('input'); c.type = 'checkbox'; c.value = k; c.checked = on; l.append(c, el('span', '', label)); opts.append(l); return c; };
-    const boxes = [box('text', 'موديل تحسين الوصف', true), box('translate', 'موديل الترجمة', true), box('fal', 'مفتاح fal.ai', true), box('image', 'موديل الصور (بيستهلك حصة)', false)];
+    const boxes = [box('text', 'موديل تحسين الوصف', true), box('translate', 'موديل الترجمة', true), box('flux1', 'مفتاح flux1-api (الصور المجانية)', true), box('flux2', 'مفتاح flux2-api (صور Pro)', true), box('wan', 'مفتاح wan-api (الفيديو)', true)];
     const btn = el('button', 'btn', ''); btn.type = 'button'; btn.append(svg('pulse'), document.createTextNode('ابدأ الفحص'));
     const out = el('div', 'h-out');
     v.append(opts, btn, out);
@@ -336,7 +336,7 @@
 
   // ---------- secrets (Script Properties) ----------
   function secretsView(v) {
-    v.append(el('h2', '', 'الإعدادات السرية'), el('p', 'section-note', 'دي Script Properties اللي في الشيت (زي SECRIT و OTP1 و test_api). عشان تشوفها أو تعدلها لازم تكتب كلمة سر اللوحة. لو غيرت SECRIT لازم تحط نفس القيمة في الخادم وإلا الموقع هيقف.'));
+    v.append(el('h2', '', 'الإعدادات السرية'), el('p', 'section-note', 'دي Script Properties اللي في الشيت (زي SECRIT و OTP1 و flux1-api و flux2-api و wan-api). عشان تشوفها أو تعدلها لازم تكتب كلمة سر اللوحة. لو غيرت SECRIT لازم تحط نفس القيمة في الخادم وإلا الموقع هيقف.'));
     const wrap = el('div', 'tbl-wrap'); const bar = el('div', 'toolbar');
     const openB = el('button', 'btn sm', ''); openB.type = 'button'; openB.append(svg('eye'), document.createTextNode('اعرض الإعدادات'));
     const addB = el('button', 'btn sm ghost', ''); addB.type = 'button'; addB.append(svg('plus'), document.createTextNode('إضافة')); addB.hidden = true;
