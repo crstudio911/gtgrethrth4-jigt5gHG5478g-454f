@@ -2,8 +2,8 @@
   'use strict';
   const $ = id => document.getElementById(id);
   const TABS = [
-    ['home', 'نظرة عامة'], ['orders', 'الطلبات'], ['users', 'المستخدمين'], ['create', 'إنشاء حساب'],
-    ['plans', 'الباقات'], ['pricing', 'أسعار الكريديت'], ['settings', 'الإعدادات والشراء'], ['discounts', 'أكواد الخصم'],
+    ['home', 'نظرة عامة'], ['easy', 'الأسعار والشراء'], ['orders', 'الطلبات'], ['users', 'المستخدمين'], ['create', 'إنشاء حساب'],
+    ['plans', 'الباقات (متقدم)'], ['pricing', 'أسعار الكريديت (متقدم)'], ['settings', 'الإعدادات (متقدم)'], ['discounts', 'أكواد الخصم'],
     ['gifts', 'أكواد الهدايا'], ['redemptions', 'استخدامات الهدايا'], ['categories', 'الأقسام'], ['presets', 'الاختيارات'],
     ['ledger', 'سجل الكريديت'], ['security', 'سجل الأمان'],
     ['health', 'فحص الخادم والموديلات'], ['secrets', 'الإعدادات السرية'], ['tools', 'تشغيل الدوال']
@@ -11,9 +11,9 @@
   const NOTES = {
     orders: 'وافق على الطلب عشان اللي فيه يتضاف للمستخدم تلقائي وتطلعله فاتورة. الرفض بيرجع استخدام كود الخصم.',
     users: 'اضغط على أي مستخدم عشان تعدل أي بيانات ليه. كلمة السر محفوظة متشفرة (password_hash) ومينفعش حد يعرف الأصلية حتى إحنا، بس تقدر تشوف الشكل المتشفر وتحط كلمة سر جديدة. أي تعديل في الرصيد بيتسجل في سجل الكريديت.',
-    ledger: 'كل الأعمدة قابلة للتعديل. خلي بالك: التعديل هنا بيغير السجل بس ومش بيغير رصيد المستخدم.',
+    ledger: 'سجل مؤقت: الحركة بتتمسح من الشيت بعد 5 دقايق من ما توصل لجهاز المستخدم (والجهاز بيحتفظ بيها). الحركات الجارية (held) بتفضل لحد ما تخلص. التعديل هنا مش بيغير رصيد المستخدم.',
     security: 'سجل الدخول والعمليات الحساسة. تقدر تعدل أو تحذف أي صف.',
-    plans: 'days = مدة الباقة بالأيام. join_credits = الكريديت اللي بيتضاف مع الشراء. renew_credits = الرصيد المتجدد اللي بيرجع كل renew_hours ساعة. video_max_sec = أقصى مدة فيديو (مضاعفات 5 لحد 30). features مفصولة بعلامة |',
+    plans: 'days = مدة الباقة بالأيام. join_credits = الكريديت اللي بيتضاف مع الشراء. renew_credits = الكريديت اللي بيتضاف لما رصيد المستخدم يخلص، بعد renew_hours ساعة من وقت ما خلص. video_max_sec = أقصى مدة فيديو (مضاعفات 5 لحد 30). features مفصولة بعلامة |',
     pricing: 'تكلفة كل عملية بالكريديت. active = no يخلي العملية ببلاش (ماعدا الصور والفيديو أقل حاجة 1).',
     settings: 'سعر الكريديت: credit_min بسعر credit_min_price دولار، والشراء بمضاعفات credit_step.',
     discounts: 'value = قيمة الخصم بالدولار. applies_to = all أو plan أو credits أو اسم باقة (مثلاً pro). max_uses = 0 يعني بلا حد. expires_at تاريخ زي 2026-12-31. active = yes لتفعيله.',
@@ -22,7 +22,7 @@
     presets: 'الاختيارات جوه كل قسم. category = id القسم.'
   };
   const LABELS = {
-    id: 'المعرف', name: 'الاسم', email: 'البريد', invited_by: 'دعاه', invite_code: 'كود الدعوة', created_at: 'اتعمل', last_used_at: 'آخر دخول', terms_accepted_at: 'وافق على الشروط', plan: 'الباقة', plan_until: 'الباقة لحد', credits: 'كريديت', bonus_credits: 'رصيد ثابت', credits_cycle_at: 'آخر تجديد', status: 'الحالة',
+    id: 'المعرف', name: 'الاسم', email: 'البريد', invited_by: 'دعاه', invite_code: 'كود الدعوة', created_at: 'اتعمل', last_used_at: 'آخر دخول', terms_accepted_at: 'وافق على الشروط', plan: 'الباقة', plan_until: 'الباقة لحد', credits: 'كريديت', bonus_credits: 'قديم (بيتجمع في الكريديت)', credits_cycle_at: 'الرصيد خلص من', status: 'الحالة',
     price: 'السعر $', currency: 'العملة', period: 'الفترة', days: 'الأيام', per_minute: 'في الدقيقة', join_credits: 'كريديت الاشتراك', renew_credits: 'الرصيد المتجدد', renew_hours: 'التجديد كل (ساعة)', pro_mode: 'وضع Pro', max_refs: 'أقصى صور مرجعية', video_max_sec: 'أقصى فيديو (ث)', features: 'المميزات', highlight: 'مميزة', active: 'مفعل', order: 'الترتيب',
     key: 'المفتاح', label: 'الوصف', value: 'القيمة', time: 'الوقت', user_id: 'المستخدم', kind: 'النوع', item: 'البند', subtotal: 'السعر', discount_code: 'كود الخصم', discount: 'الخصم', total: 'الإجمالي', region: 'المنطقة', invoice_no: 'الفاتورة', decided_at: 'وقت القرار', note: 'ملاحظة',
     code: 'الكود', applies_to: 'ينطبق على', max_uses: 'أقصى استخدام', used: 'اتستخدم', expires_at: 'ينتهي', details: 'التفاصيل', action: 'العملية', balance_after: 'الرصيد بعدها', split: 'التقسيم', event: 'الحدث', ip: 'IP',
@@ -62,6 +62,7 @@
     if (cur === 'health') return healthView(v);
     if (cur === 'secrets') return secretsView(v);
     if (cur === 'tools') return toolsView(v);
+    if (cur === 'easy') return easyView(v);
     return table(v);
   }
 
@@ -79,7 +80,7 @@
   }
 
   function create(v) {
-    v.append(el('h2', '', 'إنشاء حساب من غير كود تحقق'), el('p', 'section-note', 'الحساب بيتعمل على طول ويقدر يدخل بالبريد وكلمة السر دي. الكريديت بيتضاف كرصيد ثابت.'));
+    v.append(el('h2', '', 'إنشاء حساب من غير كود تحقق'), el('p', 'section-note', 'الحساب بيتعمل على طول ويقدر يدخل بالبريد وكلمة السر دي. الكريديت بيتضاف لرصيده.'));
     const f = el('form', 'create-form'); f.noValidate = true;
     const fld = (label, inp) => { const l = el('label', 'field', label); l.append(inp); f.append(l); return inp; };
     const mk = (t, ph) => { const i = el('input'); i.type = t; if (ph) i.placeholder = ph; return i; };
@@ -234,6 +235,45 @@
     if (!dlg.open) dlg.showModal();
   }
 
+  // ---------- easy prices & shop ----------
+  const EASY_PLAN = [['name', 'الاسم'], ['price', 'السعر $'], ['days', 'المدة (يوم)'], ['join_credits', 'كريديت الاشتراك'], ['renew_credits', 'الرصيد المتجدد'], ['renew_hours', 'التجديد بعد (ساعة)'], ['active', 'مفعلة']];
+  async function easyView(v) {
+    v.append(el('h2', '', 'الأسعار والشراء'), el('p', 'section-note', 'غيّر الرقم واضغط حفظ جنب الصف. التعديل بيوصل للموقع خلال دقيقة.'));
+    const view = cur;
+    const load = t => call({ op: 'list', table: t, page: 0 });
+    const [pl, pr, st] = await Promise.all([load('plans'), load('pricing'), load('settings')]);
+    if (cur !== view) return;
+    const row = (table, d, r, fields, title) => {
+      const o = {}; d.headers.forEach((h, i) => { o[h] = r.v[i]; });
+      const card = el('div', 'easy-row');
+      if (title) card.append(el('b', 'easy-title', title(o)));
+      const ins = {};
+      fields.forEach(([h, lab]) => {
+        const l = el('label', 'field'); l.append(el('span', '', lab));
+        let inp;
+        if (h === 'active') { inp = el('select'); [['yes', 'نعم'], ['no', 'لا']].forEach(([x, t]) => { const op = el('option', '', t); op.value = x; inp.append(op); }); inp.value = /^(yes|true|1|نعم)$/i.test(o[h]) ? 'yes' : 'no'; }
+        else { inp = el('input'); inp.value = o[h] || ''; if (h !== 'name' && h !== 'value' || /^\d/.test(o[h] || '')) { inp.inputMode = 'decimal'; inp.dir = 'ltr'; } }
+        ins[h] = inp; l.append(inp); card.append(l);
+      });
+      const b = el('button', 'btn sm', 'حفظ'); b.type = 'button';
+      b.addEventListener('click', async () => {
+        const values = {}; Object.keys(ins).forEach(h => { values[h] = ins[h].value.trim(); });
+        b.disabled = true;
+        try {
+          const x = await call({ op: 'save', table, row: r.r, key: r.v[0], values });
+          if (!x.ok) { toast(ERR[x.error] || 'حصلت مشكلة', 'err'); return; }
+          toast('اتحفظ', 'ok');
+        } finally { b.disabled = false; }
+      });
+      card.append(b);
+      return card;
+    };
+    const sec = (title, note) => { const s = el('section', 'easy-sec'); s.append(el('h3', '', title)); if (note) s.append(el('p', 'hint', note)); v.append(s); return s; };
+    if (pl.ok) { const s = sec('الباقات', 'السعر بالدولار. الرصيد المتجدد بيتضاف لما رصيد المستخدم يخلص وبعد عدد الساعات.'); pl.data.rows.forEach(r => s.append(row('plans', pl.data, r, EASY_PLAN, o => o.id))); }
+    if (pr.ok) { const s = sec('تكلفة العمليات بالكريديت'); pr.data.rows.forEach(r => s.append(row('pricing', pr.data, r, [['credits', 'الكريديت'], ['active', 'مفعل']], o => o.label || o.key))); }
+    if (st.ok) { const s = sec('الشراء وإعدادات المتجر', 'سعر الكريديت: أقل عدد بسعر أقل عدد، والشراء بمضاعفات.'); st.data.rows.forEach(r => s.append(row('settings', st.data, r, [['value', 'القيمة']], o => o.label || o.key))); }
+  }
+
   // ---------- password confirm ----------
   function askPass(title, note, word) {
     return new Promise(res => {
@@ -342,7 +382,8 @@
   // ---------- run setup / reset / dell ----------
   const FNS = [
     ['setup', 'setup', 'بيعمل الجداول الناقصة ويظبط العناوين ويضيف الإعدادات الافتراضية. آمن ومش بيمسح بيانات.', ''],
-    ['reset', 'reset', 'بيمسح كل المستخدمين والطلبات وسجل الكريديت والأمان والهدايا المستخدمة. الباقات والأسعار والإعدادات والأقسام بتفضل.', 'RESET'],
+    ['reset', 'reset', 'بيمسح المستخدمين والطلبات والفواتير وسجل الكريديت والأمان واستخدامات الأكواد. الباقات والأسعار والإعدادات والأكواد والأقسام مش بتتلمس.', 'RESET'],
+    ['REMOVE_HES', 'REMOVE_HES', 'بيمسح السجلات بس: سجل الأمان كله، وحركات سجل الكريديت اللي خلصت. المستخدمين والطلبات والأسعار مش بتتلمس.', 'REMOVE'],
     ['dell', 'dell', 'بيمسح كل أوراق الشيت نهائياً (حتى ورقة ss اللي فيها دخول اللوحة). بعدها لازم تشغل setup من الشيت نفسه وتكتب بيانات الدخول من جديد.', 'DELL']
   ];
   function toolsView(v) {

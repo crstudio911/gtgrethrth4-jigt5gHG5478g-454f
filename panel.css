@@ -73,3 +73,9 @@
 .pass-form { display: grid; gap: 12px; }
 .pass-form .adm-f input { width: 100%; padding: 11px 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--input); color: var(--text); }
 .bar-logo img { width: 34px; height: 34px; display: block; }
+.easy-sec { margin: 18px 0 26px; }
+.easy-sec h3 { margin: 0 0 6px; color: var(--primary); }
+.easy-row { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 10px; padding: 12px; margin-top: 10px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface, transparent); }
+.easy-row .field { flex: 1 1 130px; min-width: 110px; margin: 0; }
+.easy-title { flex: 1 1 100%; font-size: .95rem; }
+.easy-row .btn { flex: 0 0 auto; }
