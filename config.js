@@ -1,5 +1,9 @@
-// لوحة التحكم منفصلة عن موقع المستخدمين، لكنها بتكلم نفس الخادم (Worker).
-// لازم تضيف رابط اللوحة نفسه في متغير ALLOW في الـ Worker وإلا الخادم هيرفضها.
+// لوحة التحكم بتكلم نفس سيرفرات الموقع. لازم تضيف رابط اللوحة في متغير ALLOW في كل سيرفر.
+// سيرفرات الموقع بالترتيب: الأول هو الأساسي، واللي بعده احتياطي.
+// كل السيرفرات لازم يكون فيها نفس الـ worker.js ونفس المتغيرات (SHET_URL و SECRIT و ALLOW ...).
 window.SIRB_CONFIG = Object.freeze({
-  WORKER_URL: 'https://sirbai-api.mahmoudmomajeed.workers.dev'
+  WORKER_URLS: [
+    'https://sirbai-api.mahmoudmomajeed.workers.dev',
+    'https://sirbai-api2.7oka12345678910.workers.dev'
+  ]
 });

@@ -2,8 +2,8 @@
 <html lang="ar" dir="rtl" data-theme="dark">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https:; frame-src 'none'; base-uri 'none'; form-action 'none'; object-src 'none'">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-R6kjt5FwTd5vAw94Q08NLDZsSaGTzg4NsdIfKtECSp0=' https://translate.google.com https://translate.googleapis.com https://translate-pa.googleapis.com https://www.gstatic.com; style-src 'self' https://fonts.googleapis.com 'unsafe-inline' https://translate.google.com https://translate.googleapis.com https://translate-pa.googleapis.com https://www.gstatic.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://translate.google.com https://translate.googleapis.com https://translate-pa.googleapis.com https://www.gstatic.com https://www.google.com https://fonts.gstatic.com; connect-src 'self' https: https://translate.google.com https://translate.googleapis.com https://translate-pa.googleapis.com https://www.gstatic.com; frame-src https://translate.google.com; base-uri 'none'; form-action 'none'; object-src 'none'">
   <meta name="referrer" content="no-referrer">
   <meta name="robots" content="noindex, nofollow">
   <title>لوحة التحكم · Sirb_Ai</title>
@@ -44,12 +44,12 @@
     <nav class="tabs-bar" id="tabs" role="tablist"></nav>
     <main class="frame" id="view"></main>
   </div>
-  <div class="gate" id="gate"><span class="sk-line"></span><p class="hint" id="gateMsg">بنتأكد من صلاحياتك...</p></div>
+  <div class="gate" id="gate"><span class="sk-line"></span><p class="hint" id="gateMsg">جارٍ التحقق من صلاحياتك...</p></div>
   <section class="adm-login" id="login" hidden>
     <form class="card adm-card" id="loginForm" novalidate>
       <img class="adm-logo" src="img/fav.png" alt="">
       <h1><svg class="ic"><use href="#i-lock"/></svg>دخول لوحة التحكم</h1>
-      <p class="hint">للإدارة بس</p>
+      <p class="hint">للإدارة فقط</p>
       <label class="adm-f"><span>اسم المستخدم</span><input id="admUser" type="text" autocomplete="username" maxlength="100" dir="auto" required></label>
       <label class="adm-f"><span>كلمة السر</span><input id="admPass" type="password" autocomplete="current-password" maxlength="200" required></label>
       <p class="msg" id="loginMsg"></p>
@@ -80,6 +80,7 @@
 
   <script src="config.js"></script>
   <script src="api.js"></script>
+  <script src="lang.js"></script>
   <script src="panel.js"></script>
 </body>
 </html>
