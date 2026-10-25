@@ -11,7 +11,7 @@
   const NOTES = {
     orders: 'وافق على الطلب ليُضاف محتواه إلى حساب المستخدم تلقائياً وتُصدر له فاتورة. يعيد الرفض استخدام كود الخصم.',
     users: 'اضغط على أي مستخدم لتعديل بياناته. كلمة السر محفوظة بصيغة مشفرة (password_hash) ولا يمكن لأحد معرفة الأصلية حتى نحن، لكن يمكنك عرض الصيغة المشفرة وتعيين كلمة سر جديدة. يُسجّل أي تعديل في الرصيد في سجل الكريديت.',
-    ledger: 'سجل مؤقت: تُحذف الحركة من الشيت بعد 5 دقائق من وصولها إلى جهاز المستخدم (ويحتفظ بها الجهاز). تبقى الحركات الجارية (held) حتى تكتمل. لا يؤثر التعديل هنا في رصيد المستخدم.',
+    ledger: 'سجل مؤقت: تُحذف الحركة من الشيت تلقائياً بعد دقيقة من وصولها إلى جهاز المستخدم (ويحتفظ بها الجهاز). تبقى الحركات الجارية (held) حتى تكتمل. لا يؤثر التعديل هنا في رصيد المستخدم. لو حركة اتحفظت عند المستخدم وفضلت في الشيت، احذفها بزر «حذف» جنبها أو بزر «حذف المحفوظ عند المستخدمين».',
     security: 'سجل الدخول والعمليات الحساسة. يمكنك تعديل أي صف أو حذفه.',
     plans: 'days = مدة الباقة بالأيام. join_credits = الكريديت المضاف عند الشراء. renew_credits = الكريديت المضاف عند نفاد رصيد المستخدم، بعد renew_hours ساعة من وقت نفاده. video_max_sec = أقصى مدة فيديو (مضاعفات 5 حتى 30). features مفصولة بعلامة |',
     pricing: 'تكلفة كل عملية بالكريديت. active = no يجعل العملية مجانية (باستثناء الصور والفيديو بحد أدنى 1).',
@@ -28,7 +28,7 @@
     code: 'الكود', applies_to: 'ينطبق على', max_uses: 'أقصى استخدام', used: 'استُخدم', expires_at: 'ينتهي', details: 'التفاصيل', action: 'العملية', balance_after: 'الرصيد بعدها', split: 'التقسيم', event: 'الحدث', ip: 'IP',
     icon: 'الأيقونة', base_prompt: 'الوصف الأساسي', category: 'القسم', group: 'المجموعة', prompt: 'الوصف'
   };
-  const ERR = { forbidden: 'ليست لديك صلاحية', stale: 'تغيّر الصف، حدّث الصفحة وحاول مرة أخرى', email_taken: 'هذا البريد مستخدم', email_invalid: 'البريد غير صحيح', plan_invalid: 'الباقة غير موجودة', date_invalid: 'التاريخ غير صحيح', key_required: 'يجب ملء الخانة الأولى (المعرف أو الكود)', key_taken: 'هذا المعرف أو الكود موجود مسبقاً', already_decided: 'سبق اتخاذ قرار بشأن هذا الطلب', user_missing: 'المستخدم غير موجود', name_invalid: 'الاسم غير صحيح', password_weak: 'يجب أن تتكون كلمة السر من 8 أحرف على الأقل وتتضمن حروفاً وأرقاماً', days_required: 'اكتب عدد أيام الباقة', busy: 'الشيت مشغول، حاول مرة أخرى', invalid: 'البيانات غير صحيحة', pass_wrong: 'كلمة سر اللوحة غير صحيحة', hash_invalid: 'صيغة password_hash غير صحيحة، استخدم خانة كلمة سر جديدة بدلاً من تعديله يدوياً', run_failed: 'توقفت الدالة بسبب خطأ', secret_short: 'SECRIT يجب أن يتكون من 32 حرفاً على الأقل', unauthorized: 'الجلسة انتهت' };
+  const ERR = { forbidden: 'ليست لديك صلاحية', stale: 'تغيّر الصف، حدّث الصفحة وحاول مرة أخرى', email_taken: 'هذا البريد مستخدم', email_invalid: 'البريد غير صحيح', plan_invalid: 'الباقة غير موجودة', date_invalid: 'التاريخ غير صحيح', key_required: 'يجب ملء الخانة الأولى (المعرف أو الكود)', key_taken: 'هذا المعرف أو الكود موجود مسبقاً', already_decided: 'سبق اتخاذ قرار بشأن هذا الطلب', user_missing: 'المستخدم غير موجود', name_invalid: 'الاسم غير صحيح', password_weak: 'كلمة السر ضعيفة: 8 أحرف على الأقل للمستخدمين و12 لكلمة سر اللوحة، وفيها حروف وأرقام', days_required: 'اكتب عدد أيام الباقة', busy: 'الشيت مشغول، حاول مرة أخرى', invalid: 'البيانات غير صحيحة', pass_wrong: 'كلمة سر اللوحة غير صحيحة', hash_invalid: 'صيغة password_hash غير صحيحة، استخدم خانة كلمة سر جديدة بدلاً من تعديله يدوياً', run_failed: 'توقفت الدالة بسبب خطأ', secret_short: 'SECRIT يجب أن يتكون من 32 حرفاً على الأقل', unauthorized: 'الجلسة انتهت', rate_limited: 'محاولات كثيرة، انتظر قليلاً' };
   const ST = { pending: 'قيد الانتظار', approved: 'تمت الموافقة', rejected: 'مرفوض' };
   const el = (t, c, x) => { const e = document.createElement(t); if (c) e.className = c; if (x != null) e.textContent = x; return e; };
   const svg = n => { const s = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); s.setAttribute('class', 'ic'); const u = document.createElementNS('http://www.w3.org/2000/svg', 'use'); u.setAttribute('href', '#i-' + n); s.append(u); return s; };
@@ -124,6 +124,16 @@
     const addB = el('button', 'btn sm'); addB.type = 'button'; addB.append(svg('plus'), el('span', '', 'إضافة')); addB.hidden = true;
     addB.addEventListener('click', () => edit(null));
     const cnt = el('span', 'count-tag');
+    if (cur === 'ledger') {
+      const cl = el('button', 'btn sm ghost danger'); cl.type = 'button'; cl.append(el('span', '', 'حذف المحفوظ عند المستخدمين'));
+      cl.title = 'يحذف كل الحركات التي وصلت لأجهزة المستخدمين وبقيت في الشيت. لا يحذف الحركات الجارية.';
+      cl.addEventListener('click', async () => {
+        if (!confirm('حذف كل الحركات التي حفظها المستخدمون على أجهزتهم من الشيت؟ الحركات الجارية ستبقى، ولن يتغير أي رصيد.')) return;
+        cl.disabled = true;
+        try { const k = await call({ op: 'ledgerClean' }); if (!k.ok) { toast(ERR[k.error] || 'حدثت مشكلة', 'err'); return; } toast(k.removed ? 'حُذفت ' + k.removed + ' حركة' : 'لا توجد حركات محفوظة متبقية', 'ok'); load(); } finally { cl.disabled = false; }
+      });
+      bar.append(cl);
+    }
     bar.append(ref, addB, cnt);
     const wrap = el('div', 'tbl-wrap'); const pager = el('div', 'pager');
     v.append(bar, wrap, pager);
@@ -137,7 +147,7 @@
       addB.hidden = !d.add;
       cnt.textContent = d.total + ' صف';
       const tb = el('table', 'tbl'); const th = el('thead'); const hr = el('tr');
-      if (cur === 'orders') hr.append(el('th', '', 'إجراء'));
+      if (cur === 'orders' || cur === 'ledger') hr.append(el('th', '', 'إجراء'));
       d.headers.forEach(h => hr.append(el('th', '', LABELS[h] || h)));
       th.append(hr); tb.append(th);
       const body = el('tbody');
@@ -153,6 +163,21 @@
             no.addEventListener('click', e => { e.stopPropagation(); decide(o, false); });
             td.append(ok, no);
           } else td.append(el('span', 'chip ' + (o.status === 'approved' ? 'ok' : 'err'), ST[o.status] || o.status));
+          tr.append(td);
+        }
+        if (cur === 'ledger') {
+          const td = el('td', 'acts'); const o = obj(r);
+          if (o.status === 'held') td.append(el('span', 'chip', 'جارية'));
+          else {
+            const x = el('button', 'btn sm ghost danger', 'حذف'); x.type = 'button';
+            x.addEventListener('click', async e => {
+              e.stopPropagation();
+              if (!confirm('حذف هذه الحركة من الشيت؟ لن يتغير رصيد المستخدم.')) return;
+              x.disabled = true;
+              try { const k = await call({ op: 'del', table: 'ledger', row: r.r, key: r.v[0] }); if (!k.ok) { toast(ERR[k.error] || 'حدثت مشكلة', 'err'); return; } toast('حُذفت الحركة', 'ok'); load(); } finally { x.disabled = false; }
+            });
+            td.append(x);
+          }
           tr.append(td);
         }
         r.v.forEach((c, j) => { const td = el('td', d.headers[j] === 'email' || /_at$|time/.test(d.headers[j]) ? 'en' : '', d.headers[j] === 'status' && ST[c] ? ST[c] : fmtT(c)); td.title = c; tr.append(td); });
@@ -307,7 +332,7 @@
     const sec = (title, note) => { const s = el('section', 'easy-sec'); s.append(el('h3', '', title)); if (note) s.append(el('p', 'hint', note)); v.append(s); return s; };
     if (pl.ok && pl.rows) { const s = sec('الباقات', 'السعر بالدولار. يُضاف الرصيد المتجدد بعد نفاد رصيد المستخدم وانقضاء عدد الساعات المحدد.'); pl.rows.forEach(r => s.append(row('plans', pl, r, EASY_PLAN, o => o.id))); }
     if (pr.ok && pr.rows) { const s = sec('تكلفة العمليات بالكريديت'); pr.rows.forEach(r => s.append(row('pricing', pr, r, [['credits', 'الكريديت'], ['active', 'مفعل']], o => o.label || o.key))); }
-    if (st.ok && st.rows) { const s = sec('الشراء وإعدادات المتجر', 'سعر الكريديت الواحد = سعر أقل عدد ÷ أقل عدد. يمكن للمستخدم شراء أي عدد بدءاً من الحد الأدنى (مثلاً 51).'); st.rows.filter(r => r.v[0] !== 'credit_step').forEach(r => s.append(row('settings', st, r, [['value', 'القيمة']], o => o.label || o.key))); }
+    if (st.ok && st.rows) { const s = sec('الإعدادات العامة والأمان والمتجر', 'هنا كل إعدادات الموقع: حدود الإنشاء، محاولات كلمة المرور ومدة الانتظار، مدة حفظ السجلات، وإعدادات الشراء. سعر الكريديت الواحد = سعر أقل عدد ÷ أقل عدد. يمكن للمستخدم شراء أي عدد بدءاً من الحد الأدنى (مثلاً 51).'); st.rows.filter(r => r.v[0] !== 'credit_step').forEach(r => s.append(row('settings', st, r, [['value', 'القيمة']], o => o.label || o.key))); }
   }
 
   // ---------- password confirm ----------
@@ -333,7 +358,7 @@
   }
 
   // ---------- health ----------
-  const HNAME = { SHET_URL: 'رابط الشيت في الخادم', SECRIT: 'المفتاح السري في الخادم', ALLOW: 'المواقع المسموحة (ALLOW)', AI: 'Cloudflare (تحسين الوصف والترجمة)', sheet_link: 'الاتصال بالشيت', schema: 'إصدار الجداول', 'prop:SECRIT': 'SECRIT في الشيت', 'prop:OTP1': 'OTP1 (إرسال الأكواد)', 'prop:OTP_FROM': 'OTP_FROM (اسم المرسل)', 'prop:flux1-api': 'مفتاح flux1-api (الصور المجانية)', 'prop:flux2-api': 'مفتاح flux2-api (صور Pro)', 'prop:wan-api': 'مفتاح wan-api (الفيديو)', panel: 'بيانات دخول اللوحة (ss)', mail_quota: 'رصيد رسائل البريد الإلكتروني اليوم', 'data:plans': 'الباقات Free و Pro موجودة', 'data:renew': 'إعدادات تجديد الرصيد في الباقات', 'data:pricing': 'أسعار العمليات (الرصيد لكل عملية)', 'trigger:autoCleanLedger': 'المسح التلقائي لسجل الكريديت (كل دقيقة)', site_url: 'رابط الموقع', srv: 'السيرفر', text: 'موديل تحسين الوصف', translate: 'موديل الترجمة', flux1: 'FLUX.1-dev (مجاني)', flux2: 'FLUX.2-dev (Pro)', wan: 'Wan (الفيديو)' };
+  const HNAME = { SHET_URL: 'رابط الشيت في الخادم', SECRIT: 'المفتاح السري في الخادم', ALLOW: 'المواقع المسموحة (ALLOW)', AI: 'Cloudflare (تحسين الوصف والترجمة)', sheet_link: 'الاتصال بالشيت', schema: 'إصدار الجداول', 'prop:SECRIT': 'SECRIT في الشيت', 'prop:OTP1': 'OTP1 (إرسال الأكواد)', 'prop:OTP_FROM': 'OTP_FROM (اسم المرسل)', 'prop:flux1-api': 'مفتاح flux1-api (الصور المجانية)', 'prop:flux2-api': 'مفتاح flux2-api (صور Pro)', 'prop:wan-api': 'مفتاح wan-api (الفيديو)', panel: 'بيانات دخول اللوحة (ss)', mail_quota: 'رصيد رسائل البريد الإلكتروني اليوم', 'data:plans': 'الباقات Free و Pro موجودة', 'data:renew': 'إعدادات تجديد الرصيد في الباقات', 'data:pricing': 'أسعار العمليات (الرصيد لكل عملية)', 'trigger:autoCleanLedger': 'المسح التلقائي لسجل الكريديت (كل دقيقة)', site_url: 'رابط الموقع', srv: 'السيرفر', text: 'موديل تحسين الوصف', translate: 'موديل الترجمة', refine: 'تجربة تحسين وصف حقيقي (عربي ← إنجليزي)', peer_ai: 'الاتصال بالسيرفر التاني للذكاء الاصطناعي', flux1: 'FLUX.1-dev (مجاني)', flux2: 'FLUX.2-dev (Pro)', wan: 'Wan (الفيديو)' };
   function hRow(c) {
     const r = el('div', 'h-row');
     const name = HNAME[c.k] || (c.k.indexOf('sheet:') === 0 ? 'ورقة ' + c.k.slice(6) : c.k.indexOf('file:') === 0 ? 'ملف ' + c.k.slice(5) : c.k);
@@ -383,16 +408,19 @@
   }
 
   // ---------- secrets (Script Properties) ----------
+  // 6.26.0: secret values never come to the browser. The panel shows only whether each one is set and its length;
+  // to change one, write the new value (the old one is never shown).
   function secretsView(v) {
-    v.append(el('h2', '', 'الإعدادات السرية'), el('p', 'section-note', 'هذه Script Properties الموجودة في الشيت (مثل SECRIT و OTP1 و flux1-api و flux2-api و wan-api). لعرضها أو تعديلها يجب إدخال كلمة سر اللوحة. إذا غيّرت SECRIT فيجب تعيين القيمة نفسها في الخادم وإلا فسيتوقف الموقع.'));
+    v.append(el('h2', '', 'الإعدادات السرية'), el('p', 'section-note', 'هذه Script Properties الموجودة في الشيت (مثل SECRIT و OTP1 و flux1-api و flux2-api و wan-api). القيم السرية لا تُعرض ولا تُرسل للمتصفح نهائياً؛ يظهر فقط هل هي مضبوطة وطولها. لتغيير قيمة اضغط عليها واكتب القيمة الجديدة. إذا غيّرت SECRIT فيجب تعيين القيمة نفسها في الخادمين وإلا فسيتوقف الموقع.'));
     const wrap = el('div', 'tbl-wrap'); const bar = el('div', 'toolbar');
     const openB = el('button', 'btn sm', ''); openB.type = 'button'; openB.append(svg('eye'), document.createTextNode('اعرض الإعدادات'));
     const addB = el('button', 'btn sm ghost', ''); addB.type = 'button'; addB.append(svg('plus'), document.createTextNode('إضافة')); addB.hidden = true;
-    bar.append(openB, addB); v.append(bar, wrap);
+    const pwB = el('button', 'btn sm ghost', ''); pwB.type = 'button'; pwB.append(document.createTextNode('تغيير كلمة سر اللوحة'));
+    bar.append(openB, addB, pwB); v.append(bar, wrap);
     let pass = null;
     const view = cur;
     async function run(body) {
-      if (!pass) { pass = await askPass('عرض الإعدادات السرية', 'اكتب كلمة سر اللوحة لفتح الإعدادات السرية.'); if (!pass) return null; }
+      if (!pass) { pass = await askPass('الإعدادات السرية', 'اكتب كلمة سر اللوحة الحالية.'); if (!pass) return null; }
       const d = await call(Object.assign({ pass }, body));
       if (!d.ok) { if (d.error === 'pass_wrong') pass = null; toast(ERR[d.error] || 'حدثت مشكلة', 'err'); return null; }
       return d;
@@ -402,15 +430,16 @@
       const tb = el('table', 'tbl'); const hr = el('tr'); ['المفتاح', 'القيمة', ''].forEach(x => hr.append(el('th', '', x)));
       const th = el('thead'); th.append(hr); tb.append(th); const body = el('tbody');
       list.forEach(p => {
-        const tr = el('tr'); const val = el('td', 'en mono', '•'.repeat(Math.min(16, p.v.length || 1))); let shown = false;
+        const tr = el('tr');
+        const val = el('td', 'en mono', p.hidden ? (p.set ? 'مخفي · ' + p.len + ' حرف' : 'فارغ') : String(p.v == null ? '' : p.v));
         const acts = el('td', 'acts');
-        const eye = el('button', 'btn sm ghost', ''); eye.type = 'button'; eye.title = 'إظهار'; eye.append(svg('eye'));
-        eye.onclick = e => { e.stopPropagation(); shown = !shown; val.textContent = shown ? p.v : '•'.repeat(Math.min(16, p.v.length || 1)); };
-        const cp = el('button', 'btn sm ghost', ''); cp.type = 'button'; cp.title = 'نسخ'; cp.append(svg('copy'));
-        cp.onclick = async e => { e.stopPropagation(); try { await navigator.clipboard.writeText(p.v); toast('نُسخ', 'ok'); } catch (_) { toast('تعذر النسخ', 'err'); } };
-        acts.append(eye, cp);
+        if (!p.hidden) {
+          const cp = el('button', 'btn sm ghost', ''); cp.type = 'button'; cp.title = 'نسخ'; cp.append(svg('copy'));
+          cp.onclick = async e => { e.stopPropagation(); try { await navigator.clipboard.writeText(String(p.v || '')); toast('نُسخ', 'ok'); } catch (_) { toast('تعذر النسخ', 'err'); } };
+          acts.append(cp);
+        }
         tr.append(el('td', 'en', p.k), val, acts);
-        tr.addEventListener('click', () => editProp(p));
+        if (p.k !== 'ADMIN_HASH' && p.k !== 'ADMIN_USER') tr.addEventListener('click', () => editProp(p));
         body.append(tr);
       });
       tb.append(body); wrap.append(tb);
@@ -418,25 +447,52 @@
     async function editProp(p) {
       const k = p ? p.k : (window.prompt('اسم المفتاح الجديد (حروف إنجليزية وأرقام و _)', '') || '').trim();
       if (!k) return;
-      const nv = window.prompt('القيمة الجديدة لـ ' + k + (p ? '\n(اكتب DELETE لحذفه)' : ''), p ? p.v : '');
-      if (nv == null) return;
+      const nv = window.prompt('القيمة الجديدة لـ ' + k + (p ? '\n(القيمة الحالية لا تُعرض. اكتب DELETE لحذفه)' : ''), p && !p.hidden ? String(p.v || '') : '');
+      if (nv == null || nv === '') return;
       const d = nv === 'DELETE' && p ? await run({ op: 'propDel', pk: k }) : await run({ op: 'propSet', pk: k, pv: nv });
       if (d && cur === view) { toast(nv === 'DELETE' ? 'حُذف' : 'حُفظ', 'ok'); render(d.props || []); }
     }
     openB.addEventListener('click', async () => { const d = await run({ op: 'props' }); if (d && cur === view) render(d.props || []); });
     addB.addEventListener('click', () => editProp(null));
+    pwB.addEventListener('click', async () => {
+      const nu = window.prompt('اسم مستخدم اللوحة الجديد (اتركه فارغاً للإبقاء على الحالي)', '');
+      if (nu == null) return;
+      const np = window.prompt('كلمة سر اللوحة الجديدة (12 حرفاً على الأقل، فيها حروف وأرقام)', '');
+      if (!np) return;
+      if (window.prompt('اكتبها مرة تانية للتأكيد', '') !== np) { toast('الكلمتان غير متطابقتين', 'err'); return; }
+      pass = null;
+      const d = await run({ op: 'adminPass', newPass: np, newUser: nu.trim() });
+      if (d) { pass = null; toast('تم تغيير كلمة سر اللوحة', 'ok'); }
+    });
   }
 
   // ---------- run setup / reset / dell ----------
   const FNS = [
+    ['CLEAN_NOW', 'CLEAN_NOW', 'تنظيف فوري: يحذف المؤقت فقط (حركات الكريديت المكتملة، مهام الفيديو القديمة، سجل الأمان الأقدم من log_keep_days). لا يمس المستخدمين أو الطلبات أو الأسعار. نفس التنظيف بيحصل تلقائياً كل دقيقة.', ''],
     ['setup', 'setup', 'ينشئ الجداول الناقصة ويضبط العناوين ويضيف الإعدادات الافتراضية. آمن ولا يحذف البيانات.', ''],
     ['reset', 'reset', 'يحذف المستخدمين والطلبات والفواتير وسجل الكريديت والأمان واستخدامات الأكواد. لا يؤثر في الباقات والأسعار والإعدادات والأكواد والأقسام.', 'RESET'],
     ['REMOVE_HES', 'REMOVE_HES', 'يحذف السجلات فقط: سجل الأمان بالكامل، وحركات سجل الكريديت المكتملة. لا يؤثر في المستخدمين والطلبات والأسعار.', 'REMOVE'],
-    ['dell', 'dell', 'يحذف جميع أوراق الشيت نهائياً (حتى ورقة ss التي تتضمن بيانات دخول اللوحة). يجب بعدها تشغيل setup من الشيت نفسه وإدخال بيانات الدخول من جديد.', 'DELL']
+    ['dell', 'dell', 'يحذف جميع أوراق الشيت نهائياً. كلمة سر اللوحة المشفرة تبقى في Script Properties. يجب بعدها تشغيل setup من الشيت نفسه.', 'DELL']
   ];
   function toolsView(v) {
     v.append(el('h2', '', 'المنطقة الخطر'), el('p', 'section-note', 'قبل تشغيل أي دالة يجب إدخال كلمة سر اللوحة مرة أخرى. تتطلب الدوال التي تحذف البيانات إدخال كلمة تأكيد أيضاً.'));
     const grid = el('div', 'fn-grid'); const out = el('pre', 'fn-log en'); out.hidden = true;
+    // 6.27.0: instant shutdown. When on, every site page shows the update page within seconds; the panel keeps working.
+    const lk = el('div', 'fn-card danger');
+    const lkState = el('p', '', 'جاري قراءة الحالة...');
+    const lkB = el('button', 'btn ghost danger', 'تفعيل الإغلاق الفوري'); lkB.type = 'button'; lkB.disabled = true;
+    lk.append(el('h3', '', 'وضع الإغلاق الفوري'), el('p', '', 'استخدمه وقت أي هجوم أو مشكلة: خلال ثوانٍ يرى كل الزوار (حتى غير المسجلين) صفحة «جاري التحديث» فقط، ويرفض الخادم كل الطلبات ما عدا لوحة التحكم. عند الإيقاف يعود الموقع طبيعياً.'), lkState, lkB);
+    let lkOn = false;
+    const lkShow = on => { lkOn = on; lkState.textContent = on ? 'الحالة: الموقع مغلق الآن' : 'الحالة: الموقع يعمل طبيعياً'; lkB.textContent = on ? 'إيقاف الإغلاق وفتح الموقع' : 'تفعيل الإغلاق الفوري'; lkB.className = on ? 'btn' : 'btn ghost danger'; lkB.disabled = false; };
+    call({ op: 'lockdown' }).then(d => { if (d && d.ok) lkShow(d.lock === true); else lkState.textContent = 'تعذّر قراءة الحالة'; }).catch(() => { lkState.textContent = 'تعذّر قراءة الحالة'; });
+    lkB.addEventListener('click', async () => {
+      const next = !lkOn;
+      if (next && !window.confirm('هل تريد إغلاق الموقع لكل الزوار الآن؟')) return;
+      lkB.disabled = true;
+      try { const d = await call({ op: 'lockdown', on: next }); if (!d.ok) { toast(ERR[d.error] || 'حدثت مشكلة', 'err'); lkB.disabled = false; return; } lkShow(d.lock === true); toast(d.lock ? 'تم إغلاق الموقع' : 'تم فتح الموقع', 'ok'); }
+      catch (_) { toast('لم يستجب الخادم', 'err'); lkB.disabled = false; }
+    });
+    grid.append(lk);
     FNS.forEach(([fn, name, desc, word]) => {
       const c = el('div', 'fn-card' + (word ? ' danger' : ''));
       c.append(el('h3', 'en', name + '()'), el('p', '', desc));
@@ -472,7 +528,7 @@
     if (!started) { started = true; window.addEventListener('hashchange', show); }
     show();
   }
-  const LERR = { wrong: 'اسم المستخدم أو كلمة السر غير صحيحة', locked: 'محاولات خاطئة كثيرة، انتظر 15 دقيقة', not_set: 'بيانات الدخول غير مسجلة في الشيت (ورقة ss)', invalid: 'اكتب اسم المستخدم وكلمة السر' };
+  const LERR = { wrong: 'اسم المستخدم أو كلمة السر غير صحيحة', locked: 'محاولات خاطئة كثيرة، انتظر 15 دقيقة', not_set: 'بيانات الدخول غير مسجلة: اكتب اسم المستخدم في الخانة A1 وكلمة السر في B1 بورقة ss في الشيت', invalid: 'اكتب اسم المستخدم وكلمة السر' };
 
   document.addEventListener('DOMContentLoaded', async () => {
     api = window.SirbApi.api;
