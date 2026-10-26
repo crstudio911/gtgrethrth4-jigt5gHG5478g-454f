@@ -23,7 +23,7 @@
   ];
   const NOTES = {
     orders: "وافق على الطلب ليُضاف محتواه إلى حساب المستخدم تلقائياً وتُصدر له فاتورة. يعيد الرفض استخدام كود الخصم.",
-    users: "اضغط على أي مستخدم لتعديل بياناته. كلمة السر محفوظة بصيغة مشفرة (password_hash) ولا يمكن لأحد معرفة الأصلية حتى نحن، لكن يمكنك عرض الصيغة المشفرة وتعيين كلمة سر جديدة. يُسجّل أي تعديل في الرصيد في سجل الكريديت.",
+    users: "اضغط على أي مستخدم لتعديل بياناته. كلمة السر محفوظة مشفرة، وتقدر تظهرها بزر «إظهار كلمة السر» بعد كتابة كلمة سر اللوحة، أو تحط كلمة سر جديدة. يُسجّل أي تعديل في الرصيد في سجل الكريديت.",
     ledger: "سجل مؤقت: تُحذف الحركة من الشيت تلقائياً بعد دقيقة من وصولها إلى جهاز المستخدم (ويحتفظ بها الجهاز). تبقى الحركات الجارية (held) حتى تكتمل. لا يؤثر التعديل هنا في رصيد المستخدم. لو حركة اتحفظت عند المستخدم وفضلت في الشيت، احذفها بزر «حذف» جنبها أو بزر «حذف المحفوظ عند المستخدمين».",
     security: "سجل الدخول والعمليات الحساسة. يمكنك تعديل أي صف أو حذفه.",
     plans: "days = مدة الباقة بالأيام. join_credits = الكريديت المضاف عند الشراء. renew_credits = الكريديت المضاف عند نفاد رصيد المستخدم، بعد renew_hours ساعة من وقت نفاده. video_max_sec = أقصى مدة فيديو (مضاعفات 5 حتى 30). features مفصولة بعلامة |",
@@ -557,6 +557,34 @@
         inp.readOnly = true;
         inp.dir = "ltr";
         l.classList.add("full");
+        if (cur === "users" && r) {
+          const rb = el("button", "btn ghost", "إظهار كلمة السر");
+          rb.type = "button";
+          const shown = el("input");
+          shown.readOnly = true;
+          shown.dir = "ltr";
+          shown.hidden = true;
+          rb.onclick = async () => {
+            const pass = await askPass("إظهار كلمة السر", "اكتب كلمة سر اللوحة الحالية.");
+            if (!pass) return;
+            rb.disabled = true;
+            try {
+              const d = await call({ op: "reveal", key: String(vals.id || ""), pass });
+              if (!d.ok) return toast(ERR[d.error] || "حدثت مشكلة", "err");
+              if (!d.saved) return toast("كلمة السر دي متسجلة قبل الميزة دي. هتظهر بعد ما المستخدم يسجل دخول مرة واحدة، أو حط له كلمة سر جديدة", "err");
+              shown.value = d.password;
+              shown.hidden = false;
+            } catch (_) {
+              toast("لم يستجب الخادم", "err");
+            } finally {
+              rb.disabled = false;
+            }
+          };
+          l.append(inp, rb, shown);
+          inputs[h] = inp;
+          f.append(l);
+          return;
+        }
       }
       if (!can) {
         inp.readOnly = true;
@@ -772,10 +800,10 @@
       $("passIn").focus();
     });
   }
-  const HNAME = { SHET_URL: "رابط الشيت في الخادم", SECRIT: "المفتاح السري في الخادم", ALLOW: "المواقع المسموحة (ALLOW)", AI: "Cloudflare (تحسين الوصف والترجمة)", sheet_link: "الاتصال بالشيت", schema: "إصدار الجداول", "prop:SECRIT": "SECRIT في الشيت", "prop:OTP1": "OTP1 (إرسال الأكواد)", "prop:OTP_FROM": "OTP_FROM (اسم المرسل)", "prop:pro-api": "مفتاح pro-api (صور Pro من fal)", "prop:vid-api": "مفتاح vid-api (الفيديو من fal)", free_keys: "مفاتيح الصور المجانية (Google AI Studio)", free: "مفاتيح الصور المجانية", panel: "بيانات دخول اللوحة (ss)", mail_quota: "رصيد رسائل البريد الإلكتروني اليوم", "data:plans": "الباقات Free و Pro موجودة", "data:renew": "إعدادات تجديد الرصيد في الباقات", "data:pricing": "أسعار العمليات (الرصيد لكل عملية)", "trigger:autoCleanLedger": "المسح التلقائي لسجل الكريديت (كل دقيقة)", site_url: "رابط الموقع", srv: "السيرفر", text: "موديل تحسين الوصف", translate: "موديل الترجمة", refine: "تجربة تحسين وصف حقيقي (عربي ← إنجليزي)", peer_ai: "الاتصال بالسيرفر التاني للذكاء الاصطناعي", pro: "FLUX.2 (Pro)", vid: "Wan (الفيديو)" };
+  const HNAME = { SHET_URL: "رابط الشيت في الخادم", SECRIT: "المفتاح السري في الخادم", ALLOW: "المواقع المسموحة (ALLOW)", AI: "Cloudflare (تحسين الوصف والترجمة)", sheet_link: "الاتصال بالشيت", schema: "إصدار الجداول", "prop:SECRIT": "SECRIT في الشيت", "prop:OTP1": "OTP1 (إرسال الأكواد)", "prop:OTP_FROM": "OTP_FROM (اسم المرسل)", "prop:pro-api": "مفتاح pro-api (صور Pro من fal)", "prop:vid-api": "مفتاح vid-api (الفيديو من fal)", free_keys: "مفاتيح الصور المجانية (Google AI Studio)", free: "مفاتيح الصور المجانية", panel: "بيانات دخول اللوحة (ss)", mail_quota: "رصيد رسائل البريد الإلكتروني اليوم", "data:plans": "الباقات Free و Pro موجودة", "data:renew": "إعدادات تجديد الرصيد في الباقات", "data:pricing": "أسعار العمليات (الرصيد لكل عملية)", "trigger:autoCleanLedger": "المسح التلقائي لسجل الكريديت (كل دقيقة)", site_url: "رابط الموقع", srv: "السيرفر", text: "موديل تحسين الوصف", translate: "موديل الترجمة", refine: "تجربة تحسين وصف حقيقي (عربي ← إنجليزي)", peer_ai: "الاتصال بالسيرفر التاني للذكاء الاصطناعي", pro: "FLUX.2 (Pro)", free_gen: "تجربة إنشاء صورة مجانية", vid: "Wan (الفيديو)" };
   function hRow(c) {
     const r = el("div", "h-row");
-    const name = HNAME[c.k] || (c.k.indexOf("free:") === 0 ? "مفتاح " + c.k.slice(5) + " (صور مجانية)" : "") || (c.k.indexOf("prop:free_api") === 0 ? "مفتاح " + c.k.slice(5) + " في الشيت" : "") || (c.k.indexOf("sheet:") === 0 ? "ورقة " + c.k.slice(6) : c.k.indexOf("file:") === 0 ? "ملف " + c.k.slice(5) : c.k);
+    const name = HNAME[c.k] || (c.k.indexOf("free:") === 0 ? "مفتاح " + c.k.slice(5) + " (صور مجانية)" : "") || (c.k.indexOf("prop:free_api") === 0 ? "مفتاح " + c.k.slice(5) + " في Script Properties" : "") || (c.k.indexOf("sheet:") === 0 ? "ورقة " + c.k.slice(6) : c.k.indexOf("file:") === 0 ? "ملف " + c.k.slice(5) : c.k);
     const left = el("div", "h-name");
     left.append(el("strong", "", name));
     if (c.model) left.append(el("small", "en", c.model));
@@ -796,7 +824,7 @@
       opts.append(l);
       return c;
     };
-    const boxes = [box("text", "موديل تحسين الوصف", true), box("translate", "موديل الترجمة", true), box("free", "مفاتيح free_api (الصور المجانية - Gemini)", true), box("pro", "مفتاح pro-api (صور Pro)", true), box("vid", "مفتاح vid-api (الفيديو)", true), box("site", "صفحات الموقع وصوره", true), box("servers", "كل السيرفرات (الأساسي والاحتياطي)", true)];
+    const boxes = [box("text", "موديل تحسين الوصف", true), box("translate", "موديل الترجمة", true), box("free", "مفاتيح free_api (الصور المجانية - Gemini)", true), box("free_gen", "تجربة إنشاء صورة مجانية فعلية بكل مفتاح", false), box("pro", "مفتاح pro-api (صور Pro)", true), box("vid", "مفتاح vid-api (الفيديو)", true), box("site", "صفحات الموقع وصوره", true), box("servers", "كل السيرفرات (الأساسي والاحتياطي)", true)];
     const btn = el("button", "btn", "");
     btn.type = "button";
     btn.append(svg("pulse"), document.createTextNode("ابدأ الفحص"));
@@ -808,14 +836,37 @@
       for (let i = 0; i < 5; i++) out.append(el("span", "sk-line"));
       const t = Date.now();
       try {
-        const d = await call({ op: "health", deep: boxes.filter((b) => b.checked).map((b) => b.value) });
+        const want = boxes.filter((b) => b.checked).map((b) => b.value);
+        const d = await call({ op: "health", deep: [] });
+        if (d.ok) {
+          d.models = [];
+          d.site = [];
+          for (const part of want.filter((x) => x !== "site" && x !== "servers")) {
+            const r = await call({ op: "health", deep: [part], lite: true }).catch(() => null);
+            if (r && r.ok) d.models = d.models.concat(r.models || []);
+            else d.models.push({ k: part, ok: false, note: "no response" });
+          }
+          if (want.includes("site")) {
+            let from = 0, total = 1;
+            while (from < total) {
+              const r = await call({ op: "health", deep: ["site"], lite: true, from, count: 15 }).catch(() => null);
+              if (!r || !r.ok) {
+                d.site.push({ k: "site_url", ok: false, note: "no response" });
+                break;
+              }
+              d.site = d.site.concat(r.site || []);
+              total = r.siteTotal || 0;
+              from += 15;
+            }
+          }
+        }
         out.textContent = "";
         if (!d.ok) {
           out.append(el("p", "hint", ERR[d.error] || "حدثت مشكلة"));
           return;
         }
         d.servers = [];
-        if (boxes[6].checked) {
+        if (want.includes("servers")) {
           const urls = window.SIRB_CONFIG && window.SIRB_CONFIG.WORKER_URLS || [];
           d.servers = await Promise.all(urls.map(async (u, i) => {
             const s0 = Date.now();
