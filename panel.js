@@ -871,7 +871,7 @@
           d.servers = await Promise.all(urls.map(async (u, i) => {
             const s0 = Date.now();
             try {
-              const r = await fetch(u.replace(/\/$/, "") + "/plans", { method: "POST", credentials: "include", headers: { "Content-Type": "application/json" }, body: "{}" });
+              const r = await fetch(u.replace(/\/$/, "") + "/plans", { method: "POST", credentials: "include", headers: { "Content-Type": "application/json", "X-Sirb": "1" }, body: "{}" });
               const j = await r.json().catch(() => null);
               return { k: "srv", model: u.replace("https://", ""), ok: !!j && r.status < 500, ms: Date.now() - s0, note: i ? "احتياطي" : "أساسي" };
             } catch (_) {
