@@ -800,7 +800,7 @@
       $("passIn").focus();
     });
   }
-  const HNAME = { SHET_URL: "رابط الشيت في الخادم", SECRIT: "المفتاح السري في الخادم", ALLOW: "المواقع المسموحة (ALLOW)", AI: "Cloudflare (تحسين الوصف والترجمة)", sheet_link: "الاتصال بالشيت", schema: "إصدار الجداول", "prop:SECRIT": "SECRIT في الشيت", "prop:OTP1": "OTP1 (إرسال الأكواد)", "prop:OTP_FROM": "OTP_FROM (اسم المرسل)", "prop:pro-api": "مفتاح pro-api (صور Pro من fal)", "prop:vid-api": "مفتاح vid-api (الفيديو من fal)", free_keys: "مفاتيح الصور المجانية (Google AI Studio)", free: "مفاتيح الصور المجانية", panel: "بيانات دخول اللوحة (ss)", mail_quota: "رصيد رسائل البريد الإلكتروني اليوم", "data:plans": "الباقات Free و Pro موجودة", "data:renew": "إعدادات تجديد الرصيد في الباقات", "data:pricing": "أسعار العمليات (الرصيد لكل عملية)", "trigger:autoCleanLedger": "المسح التلقائي لسجل الكريديت (كل دقيقة)", site_url: "رابط الموقع", srv: "السيرفر", text: "موديل تحسين الوصف", translate: "موديل الترجمة", refine: "تجربة تحسين وصف حقيقي (عربي ← إنجليزي)", peer_ai: "الاتصال بالسيرفر التاني للذكاء الاصطناعي", pro: "FLUX.2 (Pro)", free_gen: "تجربة إنشاء صورة مجانية", vid: "Wan (الفيديو)" };
+  const HNAME = { SHET_URL: "رابط الشيت في الخادم", SECRIT: "المفتاح السري في الخادم", ALLOW: "المواقع المسموحة (ALLOW)", AI: "Cloudflare (تحسين الوصف والترجمة)", sheet_link: "الاتصال بالشيت", schema: "إصدار الجداول", "prop:SECRIT": "SECRIT في الشيت", "prop:OTP1": "OTP1 (إرسال الأكواد)", "prop:OTP_FROM": "OTP_FROM (اسم المرسل)", "prop:pro-api": "مفتاح pro-api (صور Pro من fal)", "prop:vid-api": "مفتاح vid-api (الفيديو من fal)", "prop:free-api": "مفتاح free-api (الصور المجانية من fal)", free: "FLUX.1 (الصور المجانية)", panel: "بيانات دخول اللوحة (ss)", mail_quota: "رصيد رسائل البريد الإلكتروني اليوم", "data:plans": "الباقات Free و Pro موجودة", "data:renew": "إعدادات تجديد الرصيد في الباقات", "data:pricing": "أسعار العمليات (الرصيد لكل عملية)", "trigger:autoCleanLedger": "المسح التلقائي لسجل الكريديت (كل دقيقة)", site_url: "رابط الموقع", srv: "السيرفر", text: "موديل تحسين الوصف", translate: "موديل الترجمة", refine: "تجربة تحسين وصف حقيقي (عربي ← إنجليزي)", peer_ai: "الاتصال بالسيرفر التاني للذكاء الاصطناعي", pro: "FLUX.2 (Pro)", vid: "Wan (الفيديو)" };
   function hRow(c) {
     const r = el("div", "h-row");
     const name = HNAME[c.k] || (c.k.indexOf("free:") === 0 ? "مفتاح " + c.k.slice(5) + " (صور مجانية)" : "") || (c.k.indexOf("prop:free_api") === 0 ? "مفتاح " + c.k.slice(5) + " في Script Properties" : "") || (c.k.indexOf("sheet:") === 0 ? "ورقة " + c.k.slice(6) : c.k.indexOf("file:") === 0 ? "ملف " + c.k.slice(5) : c.k);
@@ -824,7 +824,7 @@
       opts.append(l);
       return c;
     };
-    const boxes = [box("text", "موديل تحسين الوصف", true), box("translate", "موديل الترجمة", true), box("free", "مفاتيح free_api (الصور المجانية - Gemini)", true), box("free_gen", "تجربة إنشاء صورة مجانية فعلية بكل مفتاح", false), box("pro", "مفتاح pro-api (صور Pro)", true), box("vid", "مفتاح vid-api (الفيديو)", true), box("site", "صفحات الموقع وصوره", true), box("servers", "كل السيرفرات (الأساسي والاحتياطي)", true)];
+    const boxes = [box("text", "موديل تحسين الوصف", true), box("translate", "موديل الترجمة", true), box("free", "مفتاح free-api (الصور المجانية)", true), box("pro", "مفتاح pro-api (صور Pro)", true), box("vid", "مفتاح vid-api (الفيديو)", true), box("site", "صفحات الموقع وصوره", true), box("servers", "كل السيرفرات (الأساسي والاحتياطي)", true)];
     const btn = el("button", "btn", "");
     btn.type = "button";
     btn.append(svg("pulse"), document.createTextNode("ابدأ الفحص"));
@@ -898,7 +898,7 @@
     });
   }
   function secretsView(v) {
-    v.append(el("h2", "", "الإعدادات السرية"), el("p", "section-note", "هذه Script Properties الموجودة في الشيت (مثل SECRIT و OTP1 و free_api و free_api2 و pro-api و vid-api). القيم السرية لا تُعرض ولا تُرسل للمتصفح نهائياً؛ يظهر فقط هل هي مضبوطة وطولها. لتغيير قيمة اضغط عليها واكتب القيمة الجديدة. إذا غيّرت SECRIT فيجب تعيين القيمة نفسها في الخادمين وإلا فسيتوقف الموقع."));
+    v.append(el("h2", "", "الإعدادات السرية"), el("p", "section-note", "هذه Script Properties الموجودة في الشيت (مثل SECRIT و OTP1 و free-api و pro-api و vid-api). القيم السرية لا تُعرض ولا تُرسل للمتصفح نهائياً؛ يظهر فقط هل هي مضبوطة وطولها. لتغيير قيمة اضغط عليها واكتب القيمة الجديدة. إذا غيّرت SECRIT فيجب تعيين القيمة نفسها في الخادمين وإلا فسيتوقف الموقع."));
     const wrap = el("div", "tbl-wrap");
     const bar = el("div", "toolbar");
     const openB = el("button", "btn sm", "");
