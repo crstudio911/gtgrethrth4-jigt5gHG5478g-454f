@@ -47,7 +47,7 @@
 .adm-card .msg:empty { display: none; }
 .shell[hidden] { display: none !important; }
 
-/* فحص الخادم */
+
 .h-opts { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 12px; }
 .h-opt { display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--input); cursor: pointer; font-size: .85rem; font-weight: 700; }
 .h-opt input { accent-color: var(--primary); width: 16px; height: 16px; }
@@ -60,7 +60,7 @@
 .h-note { color: var(--muted); font-size: .76rem; max-width: 280px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 @media (max-width: 560px) { .h-row { grid-template-columns: auto 1fr; } .h-note { grid-column: 1 / -1; max-width: none; white-space: normal; } }
 
-/* تشغيل الدوال */
+
 .fn-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px; }
 .fn-card { border: 1px solid var(--line); border-radius: 16px; padding: 16px; background: var(--input); display: flex; flex-direction: column; gap: 10px; }
 .fn-card h3 { margin: 0; color: var(--primary); font-size: 1.05rem; }
